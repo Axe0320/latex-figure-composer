@@ -21,7 +21,7 @@ LaTeX 論文執筆において、**PNG・JPG・SVG 形式の画像を `\includeg
 - ファイルを選択して個別またはまとめてダウンロード
 - バックエンド・サーバー不要。ブラウザだけで完結
 
-**公開 URL：** *(デプロイ予定)*
+**公開 URL：** https://latex-figure-composer.vercel.app/
 
 ---
 
@@ -193,7 +193,7 @@ flowchart LR
 | EPS 生成 | Canvas API + 自前 PostScript 生成 |
 | スタイリング | Pure CSS（CSS Custom Properties、Tailwind 等不使用） |
 | AI アシスタント | Claude Code (Anthropic) |
-| デプロイ | Vercel（予定） |
+| デプロイ | Vercel |
 
 ---
 
@@ -318,7 +318,7 @@ latex-figure-composer/
 1. AI 支援（Claude Code）を活用したプロトタイプ開発
 2. 研究・学習上の実課題を解決するプロダクトの試作
 3. GitHub へのソースコード公開
-4. Vercel へのデプロイ（予定）
+4. Vercel へのデプロイ（公開済み: https://latex-figure-composer.vercel.app/）
 
 ---
 
