@@ -116,8 +116,10 @@ flowchart TD
         end
     end
 
-    PDF([PDF]):::out
-    EPS([EPS]):::out
+    subgraph OUT["③ 出力 Blob"]
+        PDF([PDF]):::out
+        EPS([EPS]):::out
+    end
 
     subgraph DL["④ ダウンロード"]
         INDIV([個別\nper-file ⬇]):::dl
