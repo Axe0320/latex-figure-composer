@@ -105,16 +105,19 @@ flowchart TD
     end
 
     subgraph CONV["② 変換エンジン"]
-        P1["imageToPdf\npdfDoc.embedPng()\npdfDoc.embedJpg()"]:::conv
-        P2["svgToPdf\nCanvas 2x ラスタライズ\n→ PNG → pdf-lib embed"]:::conv
-        E1["imageToEps\nRGBA → ASCIIHex LUT\nPS colorimage operator"]:::conv
-        E2["svgToEps\nCanvas 2x ラスタライズ\n→ RGBA → ASCIIHex"]:::conv
+        direction LR
+        subgraph CPDF["→ PDF"]
+            P1["imageToPdf\npdfDoc.embedPng()\npdfDoc.embedJpg()"]:::conv
+            P2["svgToPdf\nCanvas 2x ラスタライズ\n→ PNG → pdf-lib embed"]:::conv
+        end
+        subgraph CEPS["→ EPS"]
+            E1["imageToEps\nRGBA → ASCIIHex LUT\nPS colorimage operator"]:::conv
+            E2["svgToEps\nCanvas 2x ラスタライズ\n→ RGBA → ASCIIHex"]:::conv
+        end
     end
 
-    subgraph OUT["③ 出力 Blob"]
-        PDF([PDF]):::out
-        EPS([EPS]):::out
-    end
+    PDF([PDF]):::out
+    EPS([EPS]):::out
 
     subgraph DL["④ ダウンロード"]
         INDIV([個別\nper-file ⬇]):::dl
@@ -123,7 +126,8 @@ flowchart TD
 
     PNG & JPG --> DET
     SVG --> DET
-    PAR --> P1 & P2 & E1 & E2
+    PAR --> P1 & P2
+    PAR --> E1 & E2
     P1 & P2 --> PDF
     E1 & E2 --> EPS
     PDF & EPS --> INDIV
