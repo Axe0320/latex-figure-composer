@@ -6,6 +6,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
 [![pdf-lib](https://img.shields.io/badge/pdf--lib-1.x-F40F02?style=flat-square)](https://pdf-lib.js.org)
+[![jsPDF](https://img.shields.io/badge/jsPDF-2.x-orange?style=flat-square)](https://github.com/parallax/jsPDF)
 [![JSZip](https://img.shields.io/badge/JSZip-3.x-green?style=flat-square)](https://stuk.github.io/jszip)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
@@ -47,13 +48,14 @@ LaTeX / Overleaf で論文を書く学部生・大学院生・研究者。複数
 |------|-------|-------|
 | PNG  | ✅ | ✅ |
 | JPG / JPEG | ✅ | ✅ |
-| SVG  | ✅（Canvas ラスタライズ経由） | ✅（Canvas ラスタライズ経由） |
+| SVG  | ✅（ネイティブベクター: jsPDF + svg2pdf.js） | ✅（Canvas ラスタライズ経由） |
 
 ### 変換機能
 
-- **PDF 変換**：pdf-lib を使用。A4 ページ（842pt）にアスペクト比を保ってフィット
+- **PDF 変換（PNG / JPG）**：pdf-lib を使用。A4 ページ（842pt）にアスペクト比を保ってフィット
+- **PDF 変換（SVG）**：jsPDF + svg2pdf.js によるネイティブベクター PDF 出力。拡大しても劣化しないベクターデータとして埋め込み
 - **EPS 変換**：PostScript Level 2 の `colorimage` オペレータを使用。ASCIIHexDecode フィルタ、72 文字折り返し。Ghostscript・LaTeX の双方で読み込み確認済み
-- **SVG**：`<img>` + Canvas で 2x スケールにラスタライズしてから変換（シャープな出力）
+- **SVG → EPS**：`<img>` + Canvas で 2x スケールにラスタライズしてから変換（シャープな出力）
 
 ### バッチ処理・ダウンロード
 
@@ -108,7 +110,7 @@ flowchart TD
         direction LR
         subgraph CPDF["→ PDF"]
             P1["imageToPdf\npdfDoc.embedPng()\npdfDoc.embedJpg()"]:::conv
-            P2["svgToPdf\nCanvas 2x ラスタライズ\n→ PNG → pdf-lib embed"]:::conv
+            P2["svgToPdfVector\njsPDF + svg2pdf.js\nネイティブベクター"]:::conv
         end
         subgraph CEPS["→ EPS"]
             E1["imageToEps\nRGBA → ASCIIHex LUT\nPS colorimage operator"]:::conv
@@ -141,11 +143,19 @@ flowchart TD
 ```mermaid
 flowchart LR
     classDef raster fill:#10B981,color:#fff,stroke:none
+    classDef vector fill:#8B5CF6,color:#fff,stroke:none
     classDef embed  fill:#6C63FF,color:#fff,stroke:none
     classDef encode fill:#F59E0B,color:#fff,stroke:none
     classDef io     fill:#EEF2FF,color:#374151,stroke:#6C63FF,stroke-width:2px
 
-    subgraph RASTER["SVG ラスタライズ（共通）"]
+    subgraph VECTOR["SVG → PDF（ベクター）"]
+        V1[SVG text]:::io
+        V2["jsPDF + svg2pdf.js\nDOM append → render"]:::vector
+        V3["PDF ベクターデータ\n（拡大劣化なし）"]:::vector
+        V1 --> V2 --> V3
+    end
+
+    subgraph RASTER["SVG → EPS（ラスタライズ）"]
         S1[SVG text]:::io
         S2["Image + Canvas\n2× scale"]:::raster
         S3["RGBA pixel data\ngetImageData()"]:::raster
@@ -165,7 +175,7 @@ flowchart LR
     R1[PNG / JPG]:::io
     R1 --> P1
     R1 --> E1
-    S3 --> P1
+    V3 --> P1
     S3 --> E1
 ```
 
@@ -177,7 +187,8 @@ flowchart LR
 |---------|---------|
 | フレームワーク | React 18 + TypeScript 5（strict モード） |
 | ビルド | Vite |
-| PDF 生成 | pdf-lib |
+| PDF 生成（PNG/JPG） | pdf-lib |
+| PDF 生成（SVG ベクター） | jsPDF + svg2pdf.js |
 | ZIP 生成 | JSZip |
 | EPS 生成 | Canvas API + 自前 PostScript 生成 |
 | スタイリング | Pure CSS（CSS Custom Properties、Tailwind 等不使用） |
@@ -224,7 +235,7 @@ latex-figure-composer/
 │   │
 │   ├── converters/
 │   │   ├── imageToPdf.ts          # PNG/JPG → PDF（pdf-lib embedPng/embedJpg）
-│   │   ├── svgToPdf.ts            # SVG → PDF（Canvas 2x ラスタライズ → pdf-lib）
+│   │   ├── svgToPdfVector.ts      # SVG → PDF（jsPDF + svg2pdf.js ネイティブベクター）
 │   │   ├── imageToEps.ts          # PNG/JPG → EPS（RGBA → ASCIIHex → PS colorimage）
 │   │   └── svgToEps.ts            # SVG → EPS（Canvas 2x ラスタライズ → imageToEps 共有関数）
 │   │
@@ -256,9 +267,9 @@ latex-figure-composer/
 
 ## 制限事項
 
-- **SVG のベクター出力非対応**：SVG は Canvas でラスタライズ（2x スケール）してから変換するため、PDF・EPS ともにビットマップ埋め込みになります。完全なベクター PDF が必要な場合は他のツールを使用してください。
+- **SVG → EPS はラスタライズ**：SVG → EPS は Canvas で 2x スケールにラスタライズしてから変換するため、ビットマップ埋め込みになります。EPS でのベクター出力が必要な場合は他のツールを使用してください。
+- **SVG の外部フォント・CSS**：SVG → EPS 変換（Canvas 経由）では、外部フォントや複雑な CSS が反映されないことがあります。SVG → PDF（jsPDF + svg2pdf.js）は多くのケースで対応済みです。
 - **EPS のファイルサイズ**：ASCIIHex エンコードは各ピクセルを 6 文字で表現するため、高解像度画像では EPS ファイルが大きくなります。
-- **外部フォント・CSS 非適用**：SVG 中で外部フォントや複雑な CSS を使っている場合、Canvas レンダリング時に反映されないことがあります。
 - **チャンクサイズ警告**：pdf-lib と JSZip の合計サイズが 500KB を超えるため、Vite のビルド時に警告が出ます（動作には影響ありません）。
 
 ---
@@ -270,6 +281,7 @@ latex-figure-composer/
 | v1 (Phase 1) | PDF 変換 | PNG / JPG / JPEG / SVG → PDF、画像プレビュー、A4 フィット |
 | v2 (Phase 2) | EPS 変換 | PNG / JPG / JPEG / SVG → EPS（PostScript Level 2 ASCIIHex）|
 | v3 (Phase 3) | バッチ処理・UI | 複数ファイル一括変換、ステータス追跡、折りたたみ、チェックリスト選択、ZIP / 個別ダウンロード |
+| v4 | ベクター PDF | SVG → PDF をネイティブベクター出力に変更（jsPDF + svg2pdf.js）。拡大しても劣化しない PDF を生成 |
 
 ---
 
@@ -282,7 +294,7 @@ latex-figure-composer/
 - [x] 複数ファイル一括変換
 - [x] ZIP 一括ダウンロード
 - [x] ファイル選択・個別ダウンロード
-- [ ] SVG のネイティブベクター PDF 出力
+- [x] SVG のネイティブベクター PDF 出力
 - [ ] WebP / TIFF 対応
 - [ ] Vercel デプロイ
 

@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import type { FigureConversionState, FigureFileItem, OutputFormat } from '../types/conversion'
 import { detectInputFormat, buildOutputFileName, createObjectURL, revokeObjectURL } from '../utils/fileHelpers'
 import { imageToPdf } from '../converters/imageToPdf'
-import { svgToPdf } from '../converters/svgToPdf'
+import { svgToPdfVector } from '../converters/svgToPdfVector'
 import { imageToEps } from '../converters/imageToEps'
 import { svgToEps } from '../converters/svgToEps'
 
@@ -23,7 +23,7 @@ function getMimeType(outputFormat: OutputFormat): string {
 async function convertOne(item: FigureFileItem, outputFormat: OutputFormat): Promise<Blob> {
   const bytes =
     item.format === 'svg'
-      ? outputFormat === 'pdf' ? await svgToPdf(item.file) : await svgToEps(item.file)
+      ? outputFormat === 'pdf' ? await svgToPdfVector(item.file) : await svgToEps(item.file)
       : outputFormat === 'pdf' ? await imageToPdf(item.file, item.format) : await imageToEps(item.file)
   return new Blob([bytes.buffer as ArrayBuffer], { type: getMimeType(outputFormat) })
 }
