@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#6C63FF"/>
+    </marker>
+    <marker id="arr-dash" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#A78BFA"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="480" fill="#FAFAFA"/>
+  <!-- Outer border -->
+  <rect x="10" y="10" width="780" height="460" rx="10" fill="none" stroke="#E5E7EB" stroke-width="1.5"/>
+
+  <!-- ── Title ─────────────────────────────────────── -->
+  <text x="400" y="48" text-anchor="middle"
+        font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="bold" fill="#111827">
+    Proposed Method Overview
+  </text>
+  <line x1="60" y1="62" x2="740" y2="62" stroke="#E5E7EB" stroke-width="1.5"/>
+
+  <!-- ── Box 1: Input ──────────────────────────────── -->
+  <rect x="55" y="108" width="138" height="82" rx="8" fill="#EEF2FF" stroke="#6C63FF" stroke-width="2"/>
+  <text x="124" y="138" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#4338CA">Input</text>
+  <text x="124" y="158" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#6B7280">Raw Dataset</text>
+  <text x="124" y="203" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#9CA3AF">Step 1</text>
+
+  <!-- Arrow 1→2 -->
+  <line x1="193" y1="149" x2="218" y2="149" stroke="#6C63FF" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- ── Box 2: Preprocessing ──────────────────────── -->
+  <rect x="225" y="108" width="138" height="82" rx="8" fill="#F0FDF4" stroke="#10B981" stroke-width="2"/>
+  <text x="294" y="136" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#065F46">Pre-</text>
+  <text x="294" y="152" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#065F46">processing</text>
+  <text x="294" y="171" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6B7280">Tokenizer / Norm</text>
+  <text x="294" y="203" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#9CA3AF">Step 2</text>
+
+  <!-- Arrow 2→3 -->
+  <line x1="363" y1="149" x2="388" y2="149" stroke="#6C63FF" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- ── Box 3: Encoder (taller) ───────────────────── -->
+  <rect x="395" y="88" width="138" height="122" rx="8" fill="#FFF7ED" stroke="#F97316" stroke-width="2"/>
+  <text x="464" y="118" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#92400E">Encoder</text>
+  <text x="464" y="139" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6B7280">Self-Attention</text>
+  <text x="464" y="154" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6B7280">Feed-Forward</text>
+  <rect x="418" y="167" width="92" height="22" rx="4" fill="#FED7AA"/>
+  <text x="464" y="182" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#7C2D12">× L layers</text>
+  <text x="464" y="226" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#9CA3AF">Step 3</text>
+
+  <!-- Arrow 3→4 -->
+  <line x1="533" y1="149" x2="558" y2="149" stroke="#6C63FF" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- ── Box 4: Output ─────────────────────────────── -->
+  <rect x="565" y="108" width="138" height="82" rx="8" fill="#FFF1F2" stroke="#EF4444" stroke-width="2"/>
+  <text x="634" y="136" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#991B1B">Output</text>
+  <text x="634" y="152" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#991B1B">Layer</text>
+  <text x="634" y="171" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#6B7280">Prediction</text>
+  <text x="634" y="203" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#9CA3AF">Step 4</text>
+
+  <!-- ── Sub-component: Attention detail ──────────── -->
+  <line x1="464" y1="210" x2="464" y2="258" stroke="#A78BFA" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr-dash)"/>
+  <rect x="390" y="262" width="148" height="58" rx="6" fill="#F5F3FF" stroke="#A78BFA" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="464" y="286" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#5B21B6">Multi-Head</text>
+  <text x="464" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#5B21B6">Attention</text>
+
+  <!-- ── Loss / Training annotation ───────────────── -->
+  <path d="M 634 190 C 700 190 720 340 560 355" fill="none" stroke="#D1D5DB" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <polygon points="557,349 553,360 563,358" fill="#D1D5DB"/>
+  <rect x="660" y="295" width="108" height="42" rx="6" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1.5"/>
+  <text x="714" y="313" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#374151">Loss Function</text>
+  <text x="714" y="329" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#374151">Cross-Entropy</text>
+
+  <!-- Back-prop label -->
+  <text x="720" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#9CA3AF" font-style="italic">Back-propagation</text>
+  <path d="M 560 345 Q 470 390 210 375 Q 130 370 124 295" fill="none" stroke="#D1D5DB" stroke-width="1.2" stroke-dasharray="5,3"/>
+  <polygon points="120,292 124,282 129,292" fill="#D1D5DB"/>
+
+  <!-- ── Caption ───────────────────────────────────── -->
+  <line x1="60" y1="350" x2="740" y2="350" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="400" y="375" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-style="italic" fill="#374151">
+    Figure 1: Overview of the proposed architecture.
+  </text>
+  <text x="400" y="395" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#6B7280">
+    Input data is processed through preprocessing, encoding (L stacked layers), and output layers.
+  </text>
+  <text x="400" y="413" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#6B7280">
+    The model is trained end-to-end via cross-entropy loss and back-propagation.
+  </text>
+</svg>
