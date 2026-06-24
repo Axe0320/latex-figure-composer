@@ -98,9 +98,9 @@ flowchart TD
     end
 
     subgraph HOOK["useConversion hook"]
-        DET[detectInputFormat\nMIME / 拡張子判定]:::hook
-        STATE[FigureFileItem[]\npending→converting→done/error]:::hook
-        PAR[Promise.all\n並列変換]:::hook
+        DET["detectInputFormat\nMIME / 拡張子判定"]:::hook
+        STATE["FigureFileItem[]\npending→converting→done/error"]:::hook
+        PAR["Promise.all\n並列変換"]:::hook
         DET --> STATE --> PAR
     end
 
